@@ -1,4 +1,5 @@
-﻿namespace Music.Modelos;
+﻿using Music.Modelos;
+
 class Album
 {
     private List<Musica> musicas = new List<Musica>();
@@ -10,6 +11,7 @@ class Album
 
     public string Nome { get; }
     public int DuracaoTotal => musicas.Sum(m => m.Duracao);
+    public List<Musica> Musicas => musicas;
 
     public void AdicionarMusica(Musica musica)
     {
@@ -18,14 +20,11 @@ class Album
 
     public void ExibirMusicasDoAlbum()
     {
-        Console.WriteLine($"Lista de músicas do álbum: {Nome}");
-
+        Console.WriteLine($"Lista de músicas do álbum {Nome}:\n");
         foreach (var musica in musicas)
         {
             Console.WriteLine($"Música: {musica.Nome}");
         }
-
-        Console.WriteLine($"Para ouvir esse álbum inteiro você precisa de {DuracaoTotal} segundos.");
-
+        Console.WriteLine($"\nPara ouvir este álbum inteiro você precisa de {DuracaoTotal}");
     }
 }

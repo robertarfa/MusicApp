@@ -1,16 +1,24 @@
 ﻿using Music.Modelos;
 
 Banda ira = new Banda("Ira");
+ira.AdicionarNota(10);
+ira.AdicionarNota(8);
+ira.AdicionarNota(6);
+
+
 Banda beatles = new("Beatles");
+beatles.AdicionarNota(8);
+beatles.AdicionarNota(9);
+beatles.AdicionarNota(7);
 
 
 // Screen Sound
 string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
 //List<string> listaDasBandas = new List<string> { "U2", "Beatles" };
 
-Dictionary<string, List<int>> bandasRegistradas = new Dictionary<string, List<int>>();
-bandasRegistradas.Add("Link Park", new List<int> { 10, 8, 6 });
-bandasRegistradas.Add("Beatles", new List<int> { 10, 9, 7 });
+Dictionary<string, Banda> bandasRegistradas = new();
+bandasRegistradas.Add(ira.Nome, ira);
+bandasRegistradas.Add(beatles.Nome, beatles);
 void ExibirMensagemDeBoasVindas()
 {
     Console.WriteLine(@"
@@ -27,14 +35,15 @@ void ExibirMensagemDeBoasVindas()
 
 void ExibirOpcoesDoMenu()
 {
+    ExibirMensagemDeBoasVindas();
     Console.WriteLine("\nDigite 1 para registrar uma banda");
-    Console.WriteLine("Digite 2 para mostrar todas as bandas");
-    Console.WriteLine("Digite 3 para avaliar uma banda");
-    Console.WriteLine("Digite 4 para exibir a média de uma banda");
+    Console.WriteLine("Digite 2 para registrar o álbum de uma banda");
+    Console.WriteLine("Digite 3 para mostrar todas as bandas");
+    Console.WriteLine("Digite 4 para avaliar uma banda");
+    Console.WriteLine("Digite 5 para exibir os detalhes de uma banda");
     Console.WriteLine("Digite -1 para sair");
 
     Console.Write("\nDigite a sua opção: ");
-    //Quando não quer que seja nulo coloca uma exclamação no final.
     string opcaoEscolhida = Console.ReadLine()!;
     int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
 
@@ -44,16 +53,22 @@ void ExibirOpcoesDoMenu()
             RegistrarBanda();
             break;
         case 2:
-            MostrarBandasRegistradas();
+            RegistrarAlbum();
             break;
         case 3:
-            AvaliarUmaBanda();
+            MostrarBandasRegistradas();
             break;
         case 4:
-            ExibirMedia();
+            AvaliarUmaBanda();
+            break;
+        case 5:
+            ExibirDetalhes();
             break;
         case -1:
-            Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+            Console.WriteLine("Tchau tchau :)");
+            break;
+        default:
+            Console.WriteLine("Opção inválida");
             break;
     }
 
@@ -68,13 +83,40 @@ void ExibirOpcoesDoMenu()
 
         //listaDasBandas.Add(nomeDaBanda.ToString());
 
-        bandasRegistradas.Add(nomeDaBanda.ToString(), new List<int>());
+        Banda banda = new(nomeDaBanda);
+        bandasRegistradas.Add(nomeDaBanda.ToString(), banda);
 
         Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
 
         Thread.Sleep(2000);
         Console.Clear();
 
+        ExibirOpcoesDoMenu();
+    }
+
+    void RegistrarAlbum()
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Registro de álbuns");
+        Console.Write("Digite a banda cujo álbum deseja registrar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Console.Write("Agora digite o título do álbum: ");
+            string tituloAlbum = Console.ReadLine()!;
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            banda.AdicionarAlbum(new Album(tituloAlbum));
+            Console.WriteLine($"O álbum {tituloAlbum} de {nomeDaBanda} foi registrado com sucesso!");
+            Thread.Sleep(4000);
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
         ExibirOpcoesDoMenu();
     }
 
@@ -122,9 +164,12 @@ void ExibirOpcoesDoMenu()
 
         if (bandasRegistradas.ContainsKey(nomeDaBanda))
         {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+
             Console.Write($"Qual a nota que a banda {nomeDaBanda} merece: ");
             int nota = int.Parse(Console.ReadLine()!);
-            bandasRegistradas[nomeDaBanda].Add(nota);
+            banda.AdicionarNota(nota);
+
             Console.WriteLine($"\nA nota {nota} foi registrada com sucesso para a banda {nomeDaBanda}");
             Thread.Sleep(2000);
             Console.Clear();
@@ -140,35 +185,24 @@ void ExibirOpcoesDoMenu()
         }
     }
 
-    void ExibirMedia()
+    void ExibirDetalhes()
     {
         Console.Clear();
-        ExibirTituloDaOpcao("Exibir média da banda");
-        Console.Write("Qual banda você deseja ver a média de notas? ");
-
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
         string nomeDaBanda = Console.ReadLine()!;
         if (bandasRegistradas.ContainsKey(nomeDaBanda))
         {
-
-            //var media = 0;
-            //var somarNotas = 0;
-
-            //for (int i = 0; i < bandasRegistradas[nomeDaBanda].Count; i++)
-            //{
-            //    somarNotas = somarNotas + bandasRegistradas[nomeDaBanda][i];
-            //}
-
-            //media = somarNotas / bandasRegistradas[nomeDaBanda].Count;
-
-            List<int> notasDaBanda = bandasRegistradas[nomeDaBanda];
-
-            Console.WriteLine($"\nA média de notas da banda {nomeDaBanda} é {notasDaBanda.Average()}.");
-
-            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Banda notasDaBanda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {notasDaBanda.Media}.");
+            /**
+            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
+            */
+            Console.WriteLine("Digite uma tecla para votar ao menu principal");
             Console.ReadKey();
-
             Console.Clear();
             ExibirOpcoesDoMenu();
+
         }
         else
         {
@@ -179,6 +213,7 @@ void ExibirOpcoesDoMenu()
             ExibirOpcoesDoMenu();
         }
     }
+
 
     // ...
 }
