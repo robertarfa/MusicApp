@@ -1,4 +1,5 @@
-﻿class Musica
+﻿namespace Music.Modelos;
+class Musica
 {
     public Musica(Banda artista, string nome)
     {

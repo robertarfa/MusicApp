@@ -1,4 +1,5 @@
-﻿class Playlist
+﻿namespace Music.Modelos;
+class Playlist
 {
     private List<Musica> musicas = new List<Musica>();
 

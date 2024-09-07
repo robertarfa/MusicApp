@@ -1,4 +1,5 @@
-﻿class Podcast
+﻿namespace Music.Modelos;
+class Podcast
 {
     private List<Episodio> episodios = new();
     public Podcast(string nome, string host)
